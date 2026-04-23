@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Four Questions — Assessment</title>
+<style>
+
+/* ===================== RESET & BASE ===================== */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Georgia, serif;
+  font-size: 19px;
+  line-height: 1.7;
+  color: #1e2240;
+  background: #e8ecf5;
+  min-height: 100vh;
+}
+
+/* ===================== TOPO BACKGROUND ===================== */
+#topo-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("https://raw.githubusercontent.com/Nimai-Delaware/Living-Yoga-Wisdom-School/refs/heads/main/topo-map.jpg");
+  background-size: cover;
+  background-position: center top;
+}
+#topo-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 20%, rgba(232,236,245,0.55) 60%, rgba(232,236,245,0.92) 100%);
+}
+
+/* ===================== LAYOUT ===================== */
+.container { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+/* ===================== SIDEBAR ===================== */
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(8px);
+  border-right: 1px solid rgba(91,124,255,0.18);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: 2px 0 20px rgba(61,80,150,0.08);
+}
+
+.logo { padding: 24px 20px 18px; border-bottom: 1px solid rgba(91,124,255,0.12); text-align: center; }
+.logo img { width: 200px; display: block; margin: 0 auto; }
+
+.nav-label {
+  padding: 14px 20px 6px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8892b8;
+  font-family: Arial, sans-serif;
+  font-weight: 600;
+}
+
+.module-list { flex: 1; padding: 6px 12px 20px; }
+
+.module-list div {
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #3a4570;
+  border-bottom: 1px solid rgba(91,124,255,0.12);
+  transition: background 0.15s, color 0.15s, padding-left 0.15s;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.module-list div:hover { background: rgba(91,124,255,0.08); color: #2a3260; padding-left: 18px; }
+
+.module-list div.active {
+  background: linear-gradient(to right, rgba(91,124,255,0.14), rgba(91,124,255,0.05));
+  color: #2040cc;
+  font-weight: 600;
+  padding-left: 18px;
+}
+
+.module-list div.active::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 20%; height: 60%; width: 3px;
+  background: #5b7cff;
+  border-radius: 0 3px 3px 0;
+}
+
+/* Status dots in nav */
+.q-status {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #dde2ef;
+  flex-shrink: 0;
+  margin-left: auto;
+  transition: background 0.3s;
+}
+.q-status.correct { background: #2eb870; }
+.q-status.incorrect { background: #e05555; }
+.q-status.skipped { background: #e8b830; }
+
+/* ===================== MAIN CONTENT ===================== */
+.content { flex: 1; padding: 48px 48px 80px; min-height: 100vh; }
+
+.content-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.97);
+  padding: 56px 60px;
+  border-radius: 16px;
+  box-shadow: 0 2px 6px rgba(61,80,150,0.08), 0 12px 40px rgba(61,80,150,0.16), 0 40px 80px rgba(61,80,150,0.14), 0 80px 120px rgba(61,80,150,0.08);
+}
+
+/* ===================== SECTIONS ===================== */
+.section { display: none; }
+.section.active { display: block; }
+
+/* ===================== TYPOGRAPHY ===================== */
+h1 { font-size: 2em; color: #1a2060; margin: 0 0 4px; line-height: 1.25; }
+h2 { font-size: 1.55em; color: #1a2060; margin: 0 0 18px; line-height: 1.3; }
+h3 { font-size: 1.1em; color: #2a3580; margin: 28px 0 12px; font-weight: bold; }
+p { margin: 0 0 18px; color: #2c3256; }
+em { color: #5b6490; }
+
+.module-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(91,124,255,0.2), transparent);
+  margin: 28px 0;
+}
+
+/* ===================== PROGRESS BAR ===================== */
+.progress-wrap {
+  margin-bottom: 32px;
+}
+.progress-label {
+  font-size: 13px;
+  color: #8892b8;
+  font-family: Arial, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+.progress-track {
+  height: 6px;
+  background: #e0e4f0;
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, #5b7cff, #2eb870);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+/* ===================== QUESTION CARD ===================== */
+.question-number {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-family: Arial, sans-serif;
+  color: #8892b8;
+  margin-bottom: 10px;
+}
+
+.question-text {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #1a2060;
+  line-height: 1.45;
+  margin-bottom: 28px;
+}
+
+/* ===================== ANSWER OPTIONS ===================== */
+.options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 20px;
+  border: 2px solid #dde2ef;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  background: #fafbff;
+  user-select: none;
+}
+
+.option:hover { border-color: #5b7cff; background: #f0f3ff; transform: translateX(2px); }
+
+.option.selected { border-color: #5b7cff; background: #eef2ff; }
+
+.option.correct {
+  border-color: #2eb870;
+  background: #edfaf3;
+}
+
+.option.incorrect {
+  border-color: #e05555;
+  background: #fff0f0;
+}
+
+.option.reveal-correct {
+  border-color: #2eb870;
+  background: #edfaf3;
+}
+
+.option-letter {
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #8892b8;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #dde2ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: all 0.15s;
+}
+
+.option.selected .option-letter { border-color: #5b7cff; color: #5b7cff; background: white; }
+.option.correct .option-letter { border-color: #2eb870; color: #2eb870; background: white; }
+.option.incorrect .option-letter { border-color: #e05555; color: #e05555; background: white; }
+.option.reveal-correct .option-letter { border-color: #2eb870; color: #2eb870; background: white; }
+
+.option-text { font-size: 17px; line-height: 1.5; color: #2c3256; }
+
+/* ===================== FEEDBACK BOX ===================== */
+.feedback-box {
+  padding: 20px 24px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  font-size: 17px;
+  line-height: 1.6;
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+.feedback-box.correct-fb { background: #edfaf3; border-left: 4px solid #2eb870; }
+.feedback-box.incorrect-fb { background: #fff0f0; border-left: 4px solid #e05555; }
+.feedback-box strong { display: block; margin-bottom: 6px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-family: Arial, sans-serif; }
+.feedback-box.correct-fb strong { color: #1a7a40; }
+.feedback-box.incorrect-fb strong { color: #a02020; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===================== BUTTONS ===================== */
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+
+button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 0;
+  padding: 11px 22px;
+  font-size: 15px;
+  font-family: Georgia, serif;
+  color: white;
+  background: #3a5ee8;
+  border: 1.5px solid #1a3ab8;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 14px rgba(58,94,232,0.30);
+  transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
+}
+button:hover { background: #2d4ed4; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(58,94,232,0.35); }
+button:disabled { background: #a0aad0; border-color: #8090b8; cursor: not-allowed; transform: none; box-shadow: none; }
+
+button.btn-ghost {
+  background: transparent;
+  color: #3a5ee8;
+  border-color: #3a5ee8;
+  box-shadow: none;
+}
+button.btn-ghost:hover { background: rgba(58,94,232,0.06); transform: translateY(-1px); }
+
+/* ===================== SCORE SUMMARY ===================== */
+.score-ring-wrap { display: flex; justify-content: center; margin: 32px 0; }
+.score-ring { position: relative; width: 160px; height: 160px; }
+.score-ring svg { transform: rotate(-90deg); }
+.score-ring-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.score-big { font-size: 2.6em; font-weight: bold; color: #1a2060; line-height: 1; }
+.score-label { font-size: 13px; color: #8892b8; font-family: Arial, sans-serif; letter-spacing: 0.05em; }
+
+.score-breakdown { margin: 24px 0; }
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eef0f8;
+  font-size: 16px;
+}
+.score-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+
+/* ===================== SCENARIO STYLES (Rise360-inspired) ===================== */
+.scenario-section { display: none; }
+.scenario-section.active { display: block; }
+
+.scenario-card {
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 28px;
+  box-shadow: 0 4px 20px rgba(61,80,150,0.12);
+}
+
+.scenario-header {
+  background: linear-gradient(135deg, #1a2060 0%, #2a3a8a 60%, #3a5ee8 100%);
+  padding: 32px 36px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.scenario-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("https://raw.githubusercontent.com/Nimai-Delaware/Living-Yoga-Wisdom-School/refs/heads/main/topo-map.jpg");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.08;
+}
+
+.scenario-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-family: Arial, sans-serif;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.scenario-title {
+  font-size: 1.5em;
+  font-weight: bold;
+  line-height: 1.3;
+  margin: 0 0 14px;
+  position: relative;
+  color: white;
+}
+
+.scenario-body {
+  font-size: 17px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.88);
+  position: relative;
+}
+
+.scenario-content { background: white; padding: 32px 36px; }
+
+.scenario-prompt {
+  font-size: 1.05em;
+  font-weight: bold;
+  color: #1a2060;
+  margin-bottom: 20px;
+}
+
+/* Scenario choice cards */
+.scenario-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+
+.scenario-choice {
+  padding: 20px;
+  border: 2px solid #dde2ef;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.18s;
+  background: #fafbff;
+  position: relative;
+  overflow: hidden;
+}
+
+.scenario-choice::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: #5b7cff;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.scenario-choice:hover { border-color: #5b7cff; background: #f0f3ff; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(91,124,255,0.14); }
+.scenario-choice:hover::before { opacity: 1; }
+
+.scenario-choice.selected { border-color: #5b7cff; background: #eef2ff; }
+.scenario-choice.selected::before { opacity: 1; }
+
+.scenario-choice-letter {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: Arial, sans-serif;
+  color: #8892b8;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.scenario-choice-text { font-size: 16px; line-height: 1.5; color: #2c3256; }
+
+/* Consequence / reveal panel */
+.consequence-panel {
+  display: none;
+  animation: fadeIn 0.35s ease;
+}
+
+.consequence-panel.visible { display: block; }
+
+.consequence-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+
+.consequence-card {
+  padding: 18px 20px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  font-size: 15px;
+  line-height: 1.5;
+  position: relative;
+}
+
+.consequence-card .consequence-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: Arial, sans-serif;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.consequence-card.neutral { background: #f4f6ff; border-color: #dde2ef; }
+.consequence-card.neutral .consequence-label { color: #5b6490; }
+.consequence-card.selected-card { background: #eef2ff; border-color: #5b7cff; }
+.consequence-card.selected-card .consequence-label { color: #3050c0; }
+
+/* Scenario assessment question */
+.scenario-assess {
+  background: #fdf8e8;
+  border-left: 4px solid #e8b830;
+  padding: 22px 26px;
+  border-radius: 10px;
+  margin-top: 24px;
+}
+.scenario-assess-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: Arial, sans-serif;
+  color: #9a7010;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.scenario-assess-q { font-size: 17px; font-weight: bold; color: #1a2060; margin-bottom: 16px; }
+
+.scenario-assess-options { display: flex; flex-direction: column; gap: 10px; }
+.scenario-assess-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 2px solid #e8d8a0;
+  border-radius: 8px;
+  cursor: pointer;
+  background: white;
+  font-size: 16px;
+  color: #2c3256;
+  transition: all 0.15s;
+}
+.scenario-assess-option:hover { border-color: #e8b830; background: #fffaed; }
+.scenario-assess-option.selected { border-color: #e8b830; background: #fffaed; }
+.scenario-assess-option.correct { border-color: #2eb870; background: #edfaf3; }
+.scenario-assess-option.incorrect { border-color: #e05555; background: #fff0f0; }
+.scenario-assess-option input[type="radio"] { accent-color: #e8b830; width: 17px; height: 17px; flex-shrink: 0; }
+
+/* ===================== WELCOME SECTION ===================== */
+.welcome-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 28px 0;
+}
+.welcome-stat {
+  background: #eef2ff;
+  border-radius: 10px;
+  padding: 20px 22px;
+  text-align: center;
+}
+.welcome-stat-num { font-size: 2em; font-weight: bold; color: #3a5ee8; line-height: 1; }
+.welcome-stat-label { font-size: 14px; color: #5b6490; margin-top: 4px; }
+
+/* ===================== MOBILE ===================== */
+.mobile-header { display: none; }
+.mobile-nav { display: none; }
+
+@media (max-width: 900px) {
+  .sidebar { width: 240px; }
+  .content { padding: 32px 28px 60px; }
+  .content-inner { padding: 40px 36px; }
+  .scenario-choices { grid-template-columns: 1fr; }
+  .consequence-cards { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .sidebar { display: none; }
+  .container { flex-direction: column; }
+
+  .mobile-header {
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,255,255,0.97);
+    border-bottom: 1px solid rgba(91,124,255,0.18);
+    padding: 12px 16px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(61,80,150,0.10);
+  }
+  .mobile-header img { height: 36px; width: auto; }
+
+  .mobile-menu-btn {
+    display: flex; flex-direction: column; gap: 5px; cursor: pointer;
+    padding: 6px; border-radius: 6px; background: none; border: none;
+    box-shadow: none; margin-top: 0;
+  }
+  .mobile-menu-btn:hover { background: rgba(91,124,255,0.08); transform: none; box-shadow: none; }
+  .mobile-menu-btn span { display: block; width: 22px; height: 2px; background: #3a4570; border-radius: 2px; }
+
+  .mobile-nav {
+    display: none; position: fixed; top: 61px; left: 0; right: 0;
+    background: rgba(255,255,255,0.98);
+    border-bottom: 1px solid rgba(91,124,255,0.18);
+    box-shadow: 0 8px 24px rgba(61,80,150,0.14);
+    z-index: 99; max-height: calc(100vh - 61px); overflow-y: auto;
+    padding: 8px 12px 16px;
+  }
+  .mobile-nav.open { display: block; }
+  .mobile-nav-label { padding: 12px 14px 4px; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #8892b8; font-family: Arial, sans-serif; font-weight: 600; }
+  .mobile-nav div { padding: 11px 14px; border-radius: 8px; margin-bottom: 2px; cursor: pointer; font-size: 15px; line-height: 1.4; color: #3a4570; font-family: Georgia, serif; border-bottom: 1px solid rgba(91,124,255,0.10); transition: background 0.15s; }
+  .mobile-nav div:hover { background: rgba(91,124,255,0.08); }
+  .mobile-nav div.active { background: linear-gradient(to right, rgba(91,124,255,0.14), rgba(91,124,255,0.05)); color: #2040cc; font-weight: 600; border-left: 3px solid #5b7cff; padding-left: 11px; }
+
+  .content { padding: 20px 14px 60px; }
+  .content-inner { padding: 28px 22px; border-radius: 12px; }
+  h1 { font-size: 1.55em; } h2 { font-size: 1.3em; }
+  .scenario-choices { grid-template-columns: 1fr; }
+  .consequence-cards { grid-template-columns: 1fr; }
+  .welcome-grid { grid-template-columns: 1fr 1fr; }
+  button { font-size: 15px; }
+  .btn-row { flex-direction: column; }
+  .btn-row button { width: 100%; justify-content: center; }
+}
+
+</style>
+</head>
+<body>
+
+<div id="topo-bg"></div>
+
+<!-- MOBILE HEADER -->
+<div class="mobile-header">
+  <img src="https://raw.githubusercontent.com/Nimai-Delaware/Living-Yoga-Wisdom-School/refs/heads/main/Living%20Yoga%20Wisdom%20School.jpg" alt="Living Yoga Wisdom School">
+  <button class="mobile-menu-btn" onclick="toggleNav()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobile-nav">
+  <div class="mobile-nav-label">Assessment</div>
+  <div class="active" onclick="goTo(0)">Overview</div>
+  <div onclick="goTo(1)">Q1</div>
+  <div onclick="goTo(2)">Q2</div>
+  <div onclick="goTo(3)">Q3</div>
+  <div onclick="goTo(4)">Q4</div>
+  <div onclick="goTo(5)">Q5</div>
+  <div onclick="goTo(6)">Q6</div>
+  <div onclick="goTo(7)">Q7</div>
+  <div onclick="goTo(8)">Q8</div>
+  <div onclick="goTo(9)">Q9</div>
+  <div onclick="goTo(10)">Q10</div>
+  <div onclick="goTo(11)">Scenario 1</div>
+  <div onclick="goTo(12)">Scenario 2</div>
+  <div onclick="goTo(13)">Results</div>
+</div>
+
+<div class="container">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo">
+    <img src="https://raw.githubusercontent.com/Nimai-Delaware/Living-Yoga-Wisdom-School/refs/heads/main/Living%20Yoga%20Wisdom%20School.jpg" alt="Living Yoga Wisdom School">
+  </div>
+  <div class="nav-label">Assessment</div>
+  <div class="module-list" id="sidebar-nav">
+    <div class="active" onclick="goTo(0)">Overview <span class="q-status" id="s0"></span></div>
+    <div onclick="goTo(1)">Question 1 <span class="q-status" id="s1"></span></div>
+    <div onclick="goTo(2)">Question 2 <span class="q-status" id="s2"></span></div>
+    <div onclick="goTo(3)">Question 3 <span class="q-status" id="s3"></span></div>
+    <div onclick="goTo(4)">Question 4 <span class="q-status" id="s4"></span></div>
+    <div onclick="goTo(5)">Question 5 <span class="q-status" id="s5"></span></div>
+    <div onclick="goTo(6)">Question 6 <span class="q-status" id="s6"></span></div>
+    <div onclick="goTo(7)">Question 7 <span class="q-status" id="s7"></span></div>
+    <div onclick="goTo(8)">Question 8 <span class="q-status" id="s8"></span></div>
+    <div onclick="goTo(9)">Question 9 <span class="q-status" id="s9"></span></div>
+    <div onclick="goTo(10)">Question 10 <span class="q-status" id="s10"></span></div>
+    <div onclick="goTo(11)">Scenario 1 <span class="q-status" id="s11"></span></div>
+    <div onclick="goTo(12)">Scenario 2 <span class="q-status" id="s12"></span></div>
+    <div onclick="goTo(13)">Results <span class="q-status" id="s13"></span></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+<div class="content-inner">
+
+<!-- ===== SECTION 0: OVERVIEW ===== -->
+<div class="section active" id="sec0">
+  <h1>The Four Questions</h1>
+  <p><em>Interactive Assessment</em></p>
+  <div class="module-divider"></div>
+  <p>This assessment covers the core ideas from <em>The Four Questions</em> — Parts 1 and 2. It includes ten knowledge questions and two branching scenarios.</p>
+  <div class="welcome-grid">
+    <div class="welcome-stat"><div class="welcome-stat-num">10</div><div class="welcome-stat-label">Knowledge Questions</div></div>
+    <div class="welcome-stat"><div class="welcome-stat-num">2</div><div class="welcome-stat-label">Branching Scenarios</div></div>
+  </div>
+  <p>Each question shows immediate feedback. Your results are tracked in the sidebar as you go. Work through at your own pace — you can navigate freely using the sidebar.</p>
+  <div class="btn-row">
+    <button onclick="goTo(1)">Begin Assessment →</button>
+  </div>
+</div>
+
+<!-- ===== Q1 ===== -->
+<div class="section" id="sec1">
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progress</span><span id="prog-label-1">1 of 12</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:8%"></div></div>
+  </div>
+  <div class="question-text">What distinguishes "big questions" from "little questions"?</div>
+  <div class="options" id="opts1">
+    <div class="option" onclick="answer(1,'A','correct')">
+      <div class="option-letter">A</div>
+      <div class="option-text">They address meaning and purpose</div>
+    </div>
+    <div class="option" onclick="answer(1,'B','incorrect')">
+      <div class="option-letter">B</div>
+      <div class="option-text">They are harder to answer</div>
+    </div>
+    <div class="option" onclick="answer(1,'C','incorrect')">
+      <div class="option-letter">C</div>
+      <div class="option-text">They focus on survival needs</div>
+    </div>
+    <div class="option" onclick="answer(1,'D','incorrect')">
+      <div class="option-letter">D</div>
+      <div class="option-text">They only arise during crisis</div>
+    </div>
+  </div>
+  <div class="feedback-box correct-fb" id="fb1-correct"><strong>✓ Correct</strong>Big questions deal with meaning, purpose, and direction.</div>
+  <div class="feedback-box incorrect-fb" id="fb1-B"><strong>✗ Not quite</strong>Difficulty isn't the defining feature.</div>
+  <div class="feedback-box incorrect-fb" id="fb1-C"><strong>✗ Not quite</strong>Survival questions are the "little questions."</div>
+  <div class="feedback-box incorrect-fb" id="fb1-D"><strong>✗ Not quite</strong>Crises can trigger them, but big questions can be asked at any time.</div>
+  <div class="btn-row"><button id="next1" onclick="goTo(2)" disabled>Next Question →</button></div>
+</div>
+
+<!-- ===== Q2 ===== -->
+<div class="section" id="sec2">
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progress</span><span>2 of 12</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:17%"></div></div>
+  </div>
+  <div class="question-text">According to the course, what do the questions we ask primarily shape?</div>
+  <div class="options" id="opts2">
+    <div class="option" onclick="answer(2,'A','incorrect')">
+      <div class="option-letter">A</div><div class="option-text">Our external circumstances</div>
+    </div>
+    <div class="option" onclick="answer(2,'B','correct')">
+      <div class="option-letter">B</div><div class="option-text">Our consciousness and direction in life</div>
+    </div>
+    <div class="option" onclick="answer(2,'C','incorrect')">
+      <div class="option-letter">C</div><div class="option-text">Our income and success</div>
+    </div>
+    <div class="option" onclick="answer(2,'D','incorrect')">
+      <div class="option-letter">D</div><div class="option-text">Our personality type</div>
+    </div>
+  </div>
+  <div class="feedback-box correct-fb" id="fb2-correct"><strong>✓ Correct</strong>Questions shape attention, which shapes life direction.</div>
+  <div class="feedback-box incorrect-fb" id="fb2-A"><strong>✗ Not quite</strong>External circumstances, income, and personality may be influenced indirectly — but that's not the core claim.</div>
+  <div class="feedback-box incorrect-fb" id="fb2-C"><strong>✗ Not quite</strong>External circumstances, income, and personality may be influenced indirectly — but that's not the core claim.</div>
+  <div class="feedback-box incorrect-fb" id="fb2-D"><strong>✗ Not quite</strong>External circumstances, income, and personality may be influenced indirectly — but that's not the core claim.</div>
+  <div class="btn-row"><button id="next2" onclick="goTo(3)" disabled>Next Question →</button></div>
+</div>
+
+<!-- ===== Q3 ===== -->
+<div class="section" id="sec3">
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progress</span><span>3 of 12</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:25%"></div></div>
+  </div>
+  <div class="question-text">What is the primary purpose of human life according to the course?</div>
+  <div class="options" id="opts3">
+    <div class="option" onclick="answer(3,'A','incorrect')">
+      <div class="option-letter">A</div><div class="option-text">To achieve material success</div>
+    </div>
+    <div class="option" onclick="answer(3,'B','incorrect')">
+      <div class="option-letter">B</div><div class="option-text">To become independent</div>
+    </div>
+    <div class="option" onclick="answer(3,'C','correct')">
+      <div class="option-letter">C</div><div class="option-text">To revive our connection with the Divine Source</div>
+    </div>
+    <div class="option" onclick="answer(3,'D','incorrect')">
+      <div class="option-letter">D</div><div class="option-text">To avoid suffering</div>
+    </div>
+  </div>
+  <div class="feedback-box correct-fb" id="fb3-correct"><strong>✓ Correct</strong>Purpose is relational — reconnecting with the Divine.</div>
+  <div class="feedback-box incorrect-fb" id="fb3-A"><strong>✗ Not quite</strong>Material success and avoiding suffering are incomplete, temporary goals.</div>
+  <div class="feedback-box incorrect-fb" id="fb3-B"><strong>✗ Not quite</strong>The teachings emphasize connection, not independence.</div>
+  <div class="feedback-box incorrect-fb" id="fb3-D"><strong>✗ Not quite</strong>Material success and avoiding suffering are incomplete, temporary goals.</div>
+  <div class="btn-row"><button id="next3" onclick="goTo(4)" disabled>Next Question →</button></div>
+</div>
+
+<!-- ===== Q4 ===== -->
+<div class="section" id="sec4">
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progress</span><span>4 of 12</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:33%"></div></div>
+  </div>
+  <div class="question-text">What shift occurs when someone adopts a service mindset?</div>
+  <div class="options" id="opts4">
+    <div class="option" onclick="answer(4,'A','incorrect')">
+      <div class="option-letter">A</div><div class="option-text">From reflection to action</div>
+    </div>
+    <div class="option" onclick="answer(4,'B','incorrect')">
+      <div class="option-letter">B</div><div class="option-text">From dependence to independence</div>
+    </div>
+    <div class="option" onclick="answer(4,'C','correct')">
+      <div class="option-letter">C</div><div class="option-text">From self-centeredness to contribution</div>
+    </div>
+    <div class="option" onclick="answer(4,'D','incorrect')">
+      <div class="option-letter">D</div><div class="option-text">From effort to detachment</div>
+    </div>
+  </div>
+  <div class="feedback-box correct-fb" id="fb4-correct"><strong>✓ Correct</strong>Service reframes life around contribution rather than expectation.</div>
+  <div class="feedback-box incorrect-fb" id="fb4-A"><strong>✗ Not quite</strong>These may be related, but they're not the central shift described.</div>
+  <div class="feedback-box incorrect-fb" id="fb4-B"><strong>✗ Not quite</strong>These may be related, but they're not the central shift described.</div>
+  <div class="feedback-box incorrect-fb" id="fb4-D"><strong>✗ Not quite</strong>These may be related, but they're not the central shift described.</div>
+  <div class="btn-row"><button id="next4" onclick="goTo(5)" disabled>Next Question →</button></div>
+</div>
+
+<!-- ===== Q5 ===== -->
+<div class="section" id="sec5">
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progress</span><span>5 of 12</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:42%"></div></div>
+  </div>
+  <div class="question-text">Why does material happiness fail to fully satisfy?</div>
+  <div class="options" id="opts5">
+    <div class="option" onclick="answer(5,'A','incorrect')">
+      <div class="option-letter">A</div><div class="option-text">It depends on other people</div>
+    </div>
+    <div class="option" onclick="answer(5,'B','correct')">
+      <div class="option-letter">B</div><div class="option-text">It is temporary and cannot fulfill deeper longing</div>
+    </div>
+    <div class="option" onclick="answer(5,'C','incorrect')">
+      <div class="option-letter">C</div><div class="option-text">It requires too much effort</div>
+    </div>
+    <div class="option" onclick="answer(5,'D','incorrect')">
+      <div class="option-letter">D</div><div class="option-text">It is discouraged by tradition</div>
+    </div>
+  </div>
+  <div class="feedback-box correct-fb" id="fb5-correct"><strong>✓ Correct</strong>Temporary conditions cannot satisfy a deeper, lasting need.</div>
+  <div class="feedback-box incorrect-fb" id="fb5-A"><strong>✗ Not quite</strong>These are secondary or inaccurate explanations.</div>
+  <div class="feedback-box incorrect-fb" id="fb5-C"><strong>✗ Not quite</strong>These are secondary or inaccurate explanations.</div>
+  <div class="feedback-box incorrect-fb" id="fb5-D"><strong>✗ Not quite</strong>These are secondary or inaccurate explanations.</div>
+  <div class="btn-row"><button id="next5" onclick="goTo(6)" disabled>Next Question →</button></div>
+</div>
+
+<!-- ===== Q6 ===== -->
+<div class="section" id="sec6">
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progress</span><span>6 of 12</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:50%"></div></div>
+  </div>
+  <div class="question-text">What is the main benefit of asking "What is the lesson?"</div>
+  <div class="options" id="opts6">
+    <div class="option" onclick="answer(6,'A','incorrect')">
+      <div class="option-letter">A</div><div class="option-text">It removes all difficulty</div>
+    </div>
+    <div class="option" onclick="answer(6,'B','incorrect')">
+      <div class="option-letter">B</div><div class="option-text">It guarantees success</div>
+    </div>
+    <div class="option" onclick="answer(6,'C','correct')">
+      <div class="option-letter">C</div><div class="option-text">It shifts focus from blame to growth</div>
+    </div>
+    <div class="option" onclick="answer(6,'D','incorrect')">
+      <div class="option-letter">D</div><div class="option-text">It prevents future problems</div>
+    </div>
+  </div>
+  <div class="feedback-box correct-fb" id="fb6-correct"><strong>✓ Correct</strong>It reframes challenges as opportunities for learning.</div>
+  <div class="feedback-box incorrect-fb" id="fb6-A"><strong>✗ Not quite</strong>The course does not promise control over outcomes.</div>
+  <div class="feedback-box incorrect-fb" id="fb6-B"><strong>✗ Not quite</strong>The course does not promise control over outcomes.</div>
+  <div class="feedback-box incorrect-fb" id="fb6-D"><strong>✗ Not quite</strong>The course does not promise control over outcomes.</div>
+  <div class="btn-row"><button id="next6" onclick="goTo(7)" disabled>Next Question →</button></div>
+</div>
+
+<!-- ===== Q7 ===== -->
+<div class="section" id="sec7">
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progress</span><span>7 of 12</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:58%"></div></div>
+  </div>
+  <div class="question-text">What primarily shapes who we become over time?</div>
+  <div class="options" id="opts7">
+    <div class="option" onclick="answer(7,'A','correct')">
+      <div class="option-letter">A</div><div class="option-text">Where we invest our attention</div>
+    </div>
+    <div class="option" onclick="answer(7,'B','incorrect')">
+      <div class="option-letter">B</div><div class="option-text">Our social environment</div>
+    </div>
+    <div class="option" onclick="answer(7,'C','incorrect')">
+      <div class="option-letter">C</div><div class="option-text">Our achievements</div>
+    </div>
+    <div class="option" onclick="answer(7,'D','incorrect')">
+      <div class="option-letter">D</div><div class="option-text">Our habits alone</div>
+    </div>
+  </div>
+  <div class="feedback-box correct-fb" id="fb7-correct"><strong>✓ Correct</strong>Repeated attention strengthens patterns that shape character.</div>
+  <div class="feedback-box incorrect-fb" id="fb7-B"><strong>✗ Not quite</strong>Social environment, achievements, and habits all matter — but attention is emphasized as the primary driver.</div>
+  <div class="feedback-box incorrect-fb" id="fb7-C"><strong>✗ Not quite</strong>Social environment, achievements, and habits all matter — but attention is emphasized as the primary driver.</div>
+  <div class="feedback-box incorrect-fb" id="fb7-D"><strong>✗ Not quite</strong>Social environment, achievements, and habits all matter — but attention is emphasized as the primary driver.</div>
+  <div class="btn-row"><button id="next7" onclick="goTo(8)" disabled>Next Question →</button></div>
+</div>
+
+<!-- ===== Q8 ===== -->
+<div class="section" id="sec8">
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progress</span><span>8 of 12</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:67%"></div></div>
+  </div>
+  <div class="question-text">What does <em>akincana</em> describe?</div>
+  <div class="options" id="opts8">
+    <div class="option" onclick="answer(8,'A','incorrect')">
+      <div class="option-letter">A</div><div class="option-text">A form of meditation</div>
+    </div>
+    <div class="option" onclick="answer(8,'B','incorrect')">
+      <div class="option-letter">B</div><div class="option-text">A state of renunciation</div>
+    </div>
+    <div class="option" onclick="answer(8,'C','correct')">
+      <div class="option-letter">C</div><div class="option-text">A mindset of humility and openness</div>
+    </div>
+    <div class="option" onclick="answer(8,'D','incorrect')">
+      <div class="option-letter">D</div><div class="option-text">A type of service role</div>
+    </div>
+  </div>
+  <div class="feedback-box correct-fb" id="fb8-correct"><strong>✓ Correct</strong>It refers to humility and a beginner's mindset.</div>
+  <div class="feedback-box incorrect-fb" id="fb8-A"><strong>✗ Not quite</strong>Meditation, renunciation, and service roles are related concepts — but not the definition of <em>akincana</em>.</div>
+  <div class="feedback-box incorrect-fb" id="fb8-B"><strong>✗ Not quite</strong>Meditation, renunciation, and service roles are related concepts — but not the definition of <em>akincana</em>.</div>
+  <div class="feedback-box incorrect-fb" id="fb8-D"><strong>✗ Not quite</strong>Meditation, renunciation, and service roles are related concepts — but not the definition of <em>akincana</em>.</div>
+  <div class="btn-row"><button id="next8" onclick="goTo(9)" disabled>Next Question →</button></div>
+</div>
+
+<!-- ===== Q9 ===== -->
+<div class="section" id="sec9">
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progress</span><span>9 of 12</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:75%"></div></div>
+  </div>
+  <div class="question-text">How does bhakti differ from other paths described?</div>
+  <div class="options" id="opts9">
+    <div class="option" onclick="answer(9,'A','incorrect')">
+      <div class="option-letter">A</div><div class="option-text">It avoids action</div>
+    </div>
+    <div class="option" onclick="answer(9,'B','correct')">
+      <div class="option-letter">B</div><div class="option-text">It redirects activity toward service to the Divine</div>
+    </div>
+    <div class="option" onclick="answer(9,'C','incorrect')">
+      <div class="option-letter">C</div><div class="option-text">It focuses on self-improvement only</div>
+    </div>
+    <div class="option" onclick="answer(9,'D','incorrect')">
+      <div class="option-letter">D</div><div class="option-text">It rejects relationships</div>
+    </div>
+  </div>
+  <div class="feedback-box correct-fb" id="fb9-correct"><strong>✓ Correct</strong>Bhakti aligns action and relationships with spiritual purpose.</div>
+  <div class="feedback-box incorrect-fb" id="fb9-A"><strong>✗ Not quite</strong>Bhakti is active and relational — it does not avoid action or reject relationships.</div>
+  <div class="feedback-box incorrect-fb" id="fb9-C"><strong>✗ Not quite</strong>Bhakti is not self-centered — it is oriented outward toward the Divine and service.</div>
+  <div class="feedback-box incorrect-fb" id="fb9-D"><strong>✗ Not quite</strong>Bhakti is active and relational — it does not avoid action or reject relationships.</div>
+  <div class="btn-row"><button id="next9" onclick="goTo(10)" disabled>Next Question →</button></div>
+</div>
+
+<!-- ===== Q10 ===== -->
+<div class="section" id="sec10">
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progress</span><span>10 of 12</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:83%"></div></div>
+  </div>
+  <div class="question-text">Why are The Four Questions meant to be asked repeatedly?</div>
+  <div class="options" id="opts10">
+    <div class="option" onclick="answer(10,'A','incorrect')">
+      <div class="option-letter">A</div><div class="option-text">Because they reorient our perspective when we drift into autopilot living</div>
+    </div>
+    <div class="option" onclick="answer(10,'B','incorrect')">
+      <div class="option-letter">B</div><div class="option-text">Because the answers may change over time</div>
+    </div>
+    <div class="option" onclick="answer(10,'C','incorrect')">
+      <div class="option-letter">C</div><div class="option-text">Because they guide daily living and decision-making</div>
+    </div>
+    <div class="option" onclick="answer(10,'D','correct')">
+      <div class="option-letter">D</div><div class="option-text">All of the above</div>
+    </div>
+  </div>
+  <div class="feedback-box correct-fb" id="fb10-correct"><strong>✓ Correct</strong>They function as an ongoing framework for life — reorienting perspective, evolving over time, and guiding daily decisions.</div>
+  <div class="feedback-box incorrect-fb" id="fb10-A"><strong>✗ Not quite</strong>That's part of it — but not the complete answer.</div>
+  <div class="feedback-box incorrect-fb" id="fb10-B"><strong>✗ Not quite</strong>That's part of it — but not the complete answer.</div>
+  <div class="feedback-box incorrect-fb" id="fb10-C"><strong>✗ Not quite</strong>That's part of it — but not the complete answer.</div>
+  <div class="btn-row"><button id="next10" onclick="goTo(11)" disabled>Continue to Scenarios →</button></div>
+</div>
+
+<!-- ===== SCENARIO 1 ===== -->
+<div class="section" id="sec11">
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progress</span><span>11 of 12</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:92%"></div></div>
+  </div>
+
+  <div class="scenario-card">
+    <div class="scenario-header">
+      <div class="scenario-eyebrow">Branching Scenario — 1 of 2</div>
+      <div class="scenario-title">You're Productive but Uneasy</div>
+      <div class="scenario-body">You've been highly productive — checking things off, staying engaged. Still, there's a subtle sense of restlessness. You have a few minutes before continuing.</div>
+    </div>
+    <div class="scenario-content">
+      <div class="scenario-prompt">What do you do?</div>
+      <div class="scenario-choices" id="sc1-choices">
+        <div class="scenario-choice" onclick="pickScenario1('A')">
+          <div class="scenario-choice-letter">Option A</div>
+          <div class="scenario-choice-text">Keep working — momentum matters</div>
+        </div>
+        <div class="scenario-choice" onclick="pickScenario1('B')">
+          <div class="scenario-choice-letter">Option B</div>
+          <div class="scenario-choice-text">Take a quick mental break (music, phone, etc.)</div>
+        </div>
+        <div class="scenario-choice" onclick="pickScenario1('C')">
+          <div class="scenario-choice-letter">Option C</div>
+          <div class="scenario-choice-text">Pause and review what you've been focused on today</div>
+        </div>
+        <div class="scenario-choice" onclick="pickScenario1('D')">
+          <div class="scenario-choice-letter">Option D</div>
+          <div class="scenario-choice-text">Think about your longer-term goals and direction</div>
+        </div>
+      </div>
+
+      <div class="consequence-panel" id="sc1-consequence">
+        <div class="consequence-cards" id="sc1-consequence-cards"></div>
+
+        <div class="scenario-assess">
+          <div class="scenario-assess-label">Assessment Question</div>
+          <div class="scenario-assess-q">Which question best fits the <em>most direct</em> way to address the restlessness?</div>
+          <div class="scenario-assess-options" id="sc1-assess-opts">
+            <label class="scenario-assess-option" onclick="assessScenario(1,'A','incorrect')">
+              <input type="radio" name="sc1q" value="A"> What is my purpose?
+            </label>
+            <label class="scenario-assess-option" onclick="assessScenario(1,'B','incorrect')">
+              <input type="radio" name="sc1q" value="B"> How can I be of service?
+            </label>
+            <label class="scenario-assess-option" onclick="assessScenario(1,'C','incorrect')">
+              <input type="radio" name="sc1q" value="C"> What is the lesson?
+            </label>
+            <label class="scenario-assess-option" onclick="assessScenario(1,'D','correct')">
+              <input type="radio" name="sc1q" value="D"> Where am I investing my attention right now?
+            </label>
+          </div>
+          <div class="feedback-box correct-fb" id="sc1-fb-correct" style="margin-top:16px;"><strong>✓ Correct</strong>The restlessness is a signal about attention — where it's been invested and whether it's aligned. That's the most direct lens here.</div>
+          <div class="feedback-box incorrect-fb" id="sc1-fb-incorrect" style="margin-top:16px;"><strong>✗ Not quite</strong>That question is valuable, but the most direct response to restlessness is examining where your attention has been going.</div>
+          <div class="btn-row" style="margin-top:16px;"><button id="next11" onclick="goTo(12)" disabled>Next Scenario →</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCENARIO 2 ===== -->
+<div class="section" id="sec12">
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progress</span><span>12 of 12</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
+  </div>
+
+  <div class="scenario-card">
+    <div class="scenario-header">
+      <div class="scenario-eyebrow">Branching Scenario — 2 of 2</div>
+      <div class="scenario-title">Public Dismissal</div>
+      <div class="scenario-body">You share an idea in a group. Someone dismisses it quickly and moves on.</div>
+    </div>
+    <div class="scenario-content">
+      <div class="scenario-prompt">What do you do?</div>
+      <div class="scenario-choices" id="sc2-choices">
+        <div class="scenario-choice" onclick="pickScenario2('A')">
+          <div class="scenario-choice-letter">Option A</div>
+          <div class="scenario-choice-text">Reassert your point clearly in the moment</div>
+        </div>
+        <div class="scenario-choice" onclick="pickScenario2('B')">
+          <div class="scenario-choice-letter">Option B</div>
+          <div class="scenario-choice-text">Let it go and stay engaged in the discussion</div>
+        </div>
+        <div class="scenario-choice" onclick="pickScenario2('C')">
+          <div class="scenario-choice-letter">Option C</div>
+          <div class="scenario-choice-text">Address it later with the person privately</div>
+        </div>
+        <div class="scenario-choice" onclick="pickScenario2('D')">
+          <div class="scenario-choice-letter">Option D</div>
+          <div class="scenario-choice-text">Reflect on your reaction before deciding what to do</div>
+        </div>
+      </div>
+
+      <div class="consequence-panel" id="sc2-consequence">
+        <div class="consequence-cards" id="sc2-consequence-cards"></div>
+
+        <div class="scenario-assess">
+          <div class="scenario-assess-label">Assessment Question</div>
+          <div class="scenario-assess-q">Which question would most help you <em>grow</em> from this situation, regardless of the action taken?</div>
+          <div class="scenario-assess-options" id="sc2-assess-opts">
+            <label class="scenario-assess-option" onclick="assessScenario(2,'A','incorrect')">
+              <input type="radio" name="sc2q" value="A"> What is my purpose?
+            </label>
+            <label class="scenario-assess-option" onclick="assessScenario(2,'B','incorrect')">
+              <input type="radio" name="sc2q" value="B"> How can I be of service?
+            </label>
+            <label class="scenario-assess-option" onclick="assessScenario(2,'C','correct')">
+              <input type="radio" name="sc2q" value="C"> What is the lesson?
+            </label>
+            <label class="scenario-assess-option" onclick="assessScenario(2,'D','incorrect')">
+              <input type="radio" name="sc2q" value="D"> Where am I investing my attention right now?
+            </label>
+          </div>
+          <div class="feedback-box correct-fb" id="sc2-fb-correct" style="margin-top:16px;"><strong>✓ Correct</strong>Regardless of how you responded, asking "What is the lesson?" turns the experience into growth rather than grievance.</div>
+          <div class="feedback-box incorrect-fb" id="sc2-fb-incorrect" style="margin-top:16px;"><strong>✗ Not quite</strong>That question has value, but the one most oriented toward growth from a difficult interpersonal moment is "What is the lesson?"</div>
+          <div class="btn-row" style="margin-top:16px;"><button id="next12" onclick="goTo(13)" disabled>See Results →</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RESULTS ===== -->
+<div class="section" id="sec13">
+  <h2>Assessment Complete</h2>
+  <div class="module-divider"></div>
+  <div class="score-ring-wrap">
+    <div class="score-ring">
+      <svg width="160" height="160" viewBox="0 0 160 160">
+        <circle cx="80" cy="80" r="68" fill="none" stroke="#e0e4f0" stroke-width="12"/>
+        <circle cx="80" cy="80" r="68" fill="none" stroke="url(#scoreGrad)" stroke-width="12"
+          stroke-linecap="round" stroke-dasharray="427" id="score-arc" stroke-dashoffset="427"/>
+        <defs>
+          <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#5b7cff"/>
+            <stop offset="100%" stop-color="#2eb870"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="score-ring-text">
+        <div class="score-big" id="score-pct">—</div>
+        <div class="score-label">Score</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="score-breakdown">
+    <div class="score-row">
+      <span><span class="score-dot" style="background:#2eb870"></span>Correct</span>
+      <span id="score-correct">—</span>
+    </div>
+    <div class="score-row">
+      <span><span class="score-dot" style="background:#e05555"></span>Incorrect</span>
+      <span id="score-incorrect">—</span>
+    </div>
+    <div class="score-row">
+      <span><span class="score-dot" style="background:#dde2ef"></span>Total Questions</span>
+      <span>12</span>
+    </div>
+  </div>
+
+  <p id="score-message" style="margin-top:8px;"></p>
+
+  <div class="btn-row">
+    <button onclick="goTo(0)">Try Again</button>
+    <button class="btn-ghost" onclick="goTo(1)">Review Questions</button>
+  </div>
+</div>
+
+</div><!-- content-inner -->
+</div><!-- content -->
+</div><!-- container -->
+
+<script>
+// ===================== STATE =====================
+const answers = {}; // qNum -> 'correct' | 'incorrect'
+const sc1Feedback = {
+  A: { label: "Momentum Lens", text: "You prioritize execution and consistency. This supports output, but may overlook whether your effort is aligned." },
+  B: { label: "Regulation Lens", text: "You reset your mental state. This helps short-term energy, but doesn't address the source of restlessness." },
+  C: { label: "Awareness Lens", text: "You examine how your attention has been used. This can reveal whether your activity is aligned or scattered." },
+  D: { label: "Purpose Lens", text: "You zoom out to long-term direction. This clarifies meaning, but may not address immediate patterns." }
+};
+const sc2Feedback = {
+  A: { label: "Assertive Response", text: "You advocate for yourself and your idea. This can clarify misunderstandings, but may increase tension depending on delivery." },
+  B: { label: "Composure", text: "You maintain flow and avoid escalation. This preserves group dynamics, but your point may go unheard." },
+  C: { label: "Delayed Response", text: "You choose timing intentionally. This can protect the relationship and improve clarity." },
+  D: { label: "Reflective Response", text: "You create space before acting. This helps you respond rather than react, but delays resolution." }
+};
+let sc1Picked = null, sc2Picked = null;
+
+// ===================== NAVIGATION =====================
+function goTo(i) {
+  if (i === 0) { resetAll(); return; }
+  document.querySelectorAll('.section').forEach((s, idx) => s.classList.toggle('active', idx === i));
+  document.querySelectorAll('#sidebar-nav div').forEach((n, idx) => n.classList.toggle('active', idx === i));
+  document.querySelectorAll('.mobile-nav div:not(.mobile-nav-label)').forEach((n, idx) => n.classList.toggle('active', idx === i));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('mobile-nav').classList.remove('open');
+  // Turn overview dot blue when Begin is clicked (navigating to q1)
+  if (i === 1) { const d = document.getElementById('s0'); if (d) { d.classList.remove('correct','incorrect','skipped'); d.style.background = '#5b7cff'; } }
+  if (i === 13) showResults();
+}
+
+function toggleNav() {
+  document.getElementById('mobile-nav').classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  const nav = document.getElementById('mobile-nav');
+  const btn = document.querySelector('.mobile-menu-btn');
+  if (nav && nav.classList.contains('open') && !nav.contains(e.target) && btn && !btn.contains(e.target)) {
+    nav.classList.remove('open');
+  }
+});
+
+// ===================== RESET =====================
+function resetAll() {
+  // Clear state
+  for (const k in answers) delete answers[k];
+  sc1Picked = null;
+  sc2Picked = null;
+
+  // Reset all option styles
+  document.querySelectorAll('.option').forEach(o => {
+    o.classList.remove('correct','incorrect','reveal-correct','selected');
+    o.style.pointerEvents = '';
+  });
+
+  // Hide all feedback boxes
+  document.querySelectorAll('.feedback-box').forEach(f => f.style.display = 'none');
+
+  // Disable all next buttons
+  for (let i = 1; i <= 12; i++) {
+    const btn = document.getElementById(`next${i}`);
+    if (btn) btn.disabled = true;
+  }
+
+  // Reset sidebar dots
+  for (let i = 0; i <= 12; i++) {
+    const dot = document.getElementById(`s${i}`);
+    if (dot) { dot.classList.remove('correct','incorrect','skipped'); dot.style.background = ''; }
+  }
+
+  // Reset scenarios
+  document.querySelectorAll('.scenario-choice').forEach(c => {
+    c.classList.remove('selected');
+    c.style.pointerEvents = '';
+  });
+  document.getElementById('sc1-consequence').classList.remove('visible');
+  document.getElementById('sc2-consequence').classList.remove('visible');
+  document.getElementById('sc1-consequence-cards').innerHTML = '';
+  document.getElementById('sc2-consequence-cards').innerHTML = '';
+  document.querySelectorAll('.scenario-assess-option').forEach(o => {
+    o.classList.remove('correct','incorrect');
+    o.style.pointerEvents = '';
+  });
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+
+  // Reset score ring
+  document.getElementById('score-arc').style.transition = 'none';
+  document.getElementById('score-arc').style.strokeDashoffset = '427';
+  document.getElementById('score-pct').textContent = '—';
+  document.getElementById('score-correct').textContent = '—';
+  document.getElementById('score-incorrect').textContent = '—';
+  document.getElementById('score-message').textContent = '';
+
+  // Show overview
+  document.querySelectorAll('.section').forEach((s, idx) => s.classList.toggle('active', idx === 0));
+  document.querySelectorAll('#sidebar-nav div').forEach((n, idx) => n.classList.toggle('active', idx === 0));
+  document.querySelectorAll('.mobile-nav div:not(.mobile-nav-label)').forEach((n, idx) => n.classList.toggle('active', idx === 0));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===================== ANSWER LOGIC =====================
+function answer(qNum, letter, result) {
+  if (answers[qNum]) return;
+  answers[qNum] = result;
+
+  const opts = document.querySelectorAll(`#opts${qNum} .option`);
+  const letters = ['A','B','C','D'];
+
+  opts.forEach((opt, i) => {
+    opt.style.pointerEvents = 'none';
+    const l = letters[i];
+    if (result === 'correct' && letter === l) {
+      opt.classList.add('correct');
+    } else if (result === 'incorrect' && letter === l) {
+      opt.classList.add('incorrect');
+      const correctLetters = { 1:'A', 2:'B', 3:'C', 4:'C', 5:'B', 6:'C', 7:'A', 8:'C', 9:'B', 10:'D' };
+      opts.forEach((o, j) => { if (letters[j] === correctLetters[qNum]) o.classList.add('reveal-correct'); });
+    }
+  });
+
+  if (result === 'correct') {
+    document.getElementById(`fb${qNum}-correct`).style.display = 'block';
+  } else {
+    const fbEl = document.getElementById(`fb${qNum}-${letter}`);
+    if (fbEl) fbEl.style.display = 'block';
+  }
+
+  const nextBtn = document.getElementById(`next${qNum}`);
+  if (nextBtn) nextBtn.disabled = false;
+
+  updateDot(qNum, result);
+}
+
+function updateDot(qNum, result) {
+  const dot = document.getElementById(`s${qNum}`);
+  if (dot) { dot.classList.remove('correct','incorrect'); dot.style.background = ''; dot.classList.add(result); }
+}
+
+// ===================== SCENARIO 1 =====================
+function pickScenario1(choice) {
+  if (sc1Picked) return;
+  sc1Picked = choice;
+
+  document.querySelectorAll('#sc1-choices .scenario-choice').forEach((el, i) => {
+    const l = ['A','B','C','D'][i];
+    el.style.pointerEvents = 'none';
+    if (l === choice) el.classList.add('selected');
+  });
+
+  const container = document.getElementById('sc1-consequence-cards');
+  container.innerHTML = '';
+  ['A','B','C','D'].forEach(l => {
+    const fb = sc1Feedback[l];
+    const isSelected = l === choice;
+    const card = document.createElement('div');
+    card.className = `consequence-card ${isSelected ? 'selected-card' : 'neutral'}`;
+    card.innerHTML = `<span class="consequence-label">${fb.label}${isSelected ? ' — Your Choice' : ''}</span>${fb.text}`;
+    container.appendChild(card);
+  });
+
+  document.getElementById('sc1-consequence').classList.add('visible');
+}
+
+function assessScenario(num, letter, result) {
+  const prefix = `sc${num}`;
+  const opts = document.querySelectorAll(`#${prefix}-assess-opts .scenario-assess-option`);
+  opts.forEach(o => { o.style.pointerEvents = 'none'; });
+
+  const letters = ['A','B','C','D'];
+  const correctMap = { 1:'D', 2:'C' };
+
+  opts.forEach((o, i) => {
+    const l = letters[i];
+    if (l === letter) o.classList.add(result === 'correct' ? 'correct' : 'incorrect');
+    if (result === 'incorrect' && l === correctMap[num]) o.classList.add('correct');
+  });
+
+  document.getElementById(`${prefix}-fb-correct`).style.display = result === 'correct' ? 'block' : 'none';
+  document.getElementById(`${prefix}-fb-incorrect`).style.display = result === 'incorrect' ? 'block' : 'none';
+
+  const nextBtn = document.getElementById(`next${num === 1 ? 11 : 12}`);
+  if (nextBtn) nextBtn.disabled = false;
+
+  answers[num === 1 ? 11 : 12] = result;
+  updateDot(num === 1 ? 11 : 12, result);
+}
+
+// ===================== SCENARIO 2 =====================
+function pickScenario2(choice) {
+  if (sc2Picked) return;
+  sc2Picked = choice;
+
+  document.querySelectorAll('#sc2-choices .scenario-choice').forEach((el, i) => {
+    const l = ['A','B','C','D'][i];
+    el.style.pointerEvents = 'none';
+    if (l === choice) el.classList.add('selected');
+  });
+
+  const container = document.getElementById('sc2-consequence-cards');
+  container.innerHTML = '';
+  ['A','B','C','D'].forEach(l => {
+    const fb = sc2Feedback[l];
+    const isSelected = l === choice;
+    const card = document.createElement('div');
+    card.className = `consequence-card ${isSelected ? 'selected-card' : 'neutral'}`;
+    card.innerHTML = `<span class="consequence-label">${fb.label}${isSelected ? ' — Your Choice' : ''}</span>${fb.text}`;
+    container.appendChild(card);
+  });
+
+  document.getElementById('sc2-consequence').classList.add('visible');
+}
+
+// ===================== RESULTS =====================
+function showResults() {
+  const total = 12;
+  let correct = 0;
+  for (let i = 1; i <= 12; i++) { if (answers[i] === 'correct') correct++; }
+  const pct = Math.round((correct / total) * 100);
+
+  document.getElementById('score-pct').textContent = pct + '%';
+  document.getElementById('score-correct').textContent = correct;
+  document.getElementById('score-incorrect').textContent = total - correct;
+
+  const circ = 2 * Math.PI * 68;
+  const offset = circ - (pct / 100) * circ;
+  setTimeout(() => {
+    document.getElementById('score-arc').style.transition = 'stroke-dashoffset 1s ease';
+    document.getElementById('score-arc').style.strokeDashoffset = offset;
+  }, 200);
+
+  const msg = pct >= 90 ? "Excellent work — strong command of the material." :
+              pct >= 75 ? "Good understanding — a few areas worth revisiting." :
+              pct >= 60 ? "Solid start — consider reviewing the modules before moving on." :
+                          "Keep going — returning to the course content will help solidify these ideas.";
+  document.getElementById('score-message').textContent = msg;
+}
+</script>
+</body>
+</html>
